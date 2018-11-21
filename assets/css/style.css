@@ -1,0 +1,28 @@
+body {
+    background: darkslategrey;
+}
+#wrapper {
+    width: 40%;
+    margin: 0% 30%;
+    text-align: center;
+}
+h1 {
+    font-size: 3rem;
+}
+.title {
+    margin: 30% 0%;
+    /* height: 40%; */
+    background-color: bisque;
+    padding: 20% 0%;
+    line-height: 3rem;
+    
+}
+#rule {
+    font-size: 1.5rem;
+    padding: 1rem;
+}
+#startButton {
+    height: 2rem;
+    width: 5rem;
+   
+}
