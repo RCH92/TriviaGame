@@ -128,9 +128,64 @@ function shuffle(a) {
 }
 
 function game() {
-    $('#wrapper').clear();
+    $('#wrapper').empty();
+    $('#wrapper').addClass('bisque');
+    var j = [0, 1, 2, 3];
+
+    var questionDiv = $('<div>');
+    questionDiv.addClass('questions');
+    // questionDiv.addClass('clearfix');
+    
+
+    for (var i = 0; i < questionBank.length; i++) {
+        shuffle(j);
+
+        var questionText = $('<h2>');
+        questionText.addClass('qText');
+        questionText.addClass('clearfix');
+        questionText.text(questionBank[i].question);
+        questionDiv.append(questionText);
+
+        
+
+        for (var x = 0; x < j.length; x++) {
+            if (j[x] == 0) {
+                var questionAnswer = $('<input>');
+                var answerLabel = $('<label>');
+                questionAnswer.attr('type', "checkbox");
+                questionAnswer.attr('value', "correct");
+                answerLabel.addClass('clearfix');
+                answerLabel.html(questionBank[i].answer[(j[x])]);
+                answerLabel.append(questionAnswer);
+                questionDiv.append(answerLabel)
+                console.log("answers: " + questionBank[i].answer[(j[x])])
+            }
+            else {
+                var questionAnswer = $('<input>');
+                var answerLabel = $('<label>');
+                questionAnswer.attr('type', "checkbox");
+                questionAnswer.attr('value', "false");
+                answerLabel.addClass('clearfix');
+                answerLabel.html(questionBank[i].answer[(j[x])]);
+                answerLabel.append(questionAnswer);
+                questionDiv.append(answerLabel)
+            }
+        }
+    }
+    var submit = $('<button>');
+    submit.attr('id', "submit");
+    submit.text("Submit");
+    questionDiv.append(submit);
+    $('#wrapper').append(questionDiv);
 }
+
+$('#wrapper').on("click", '#submit', function() {
+    game();
+});
+$('#wrapper').on("click", '#startButton', function() {
+    game();
+});
 startScreen();
-game();
+// game();
 console.log(questionBank[1].question);
 console.log(questionBank[1].answer[0]);
