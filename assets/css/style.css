@@ -60,3 +60,12 @@ input {
     margin: 7rem;
     width: 5rem;
 }
+#timer {
+    text-align: center;
+    background:lightgreen;
+    width: 30%;
+    /* height: 10%; */
+    float: left;
+    position: fixed;
+    bottom: 47.5%;
+}

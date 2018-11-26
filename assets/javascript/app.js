@@ -90,8 +90,12 @@ var questionBank = [
         ],
     },
 ];
-
-
+var outOfTime = false;
+var time = 45;
+var j = [0, 1, 2, 3];
+var correctGuess = 0;
+var wrongGuess = 0;
+var scorePercent = 0;
 function startScreen() {
 
     var start = $('<div>');
@@ -115,6 +119,30 @@ function startScreen() {
     $('#wrapper').append(start);
 
 };
+function scoreScreen() {
+    $('#timer').text("");
+    $('#wrapper').empty();
+    $('#wrapper').removeClass('bisque');
+    var scoreCard = $('<div>');
+    scoreCard.attr('class', 'title')
+
+
+    var scoreText = $('<h2>');
+    if (outOfTime) {
+        scoreText.text("You ran out of time! Here is your score:");
+    }
+    else {
+        scoreText.text("You finished in " + (45 - time) + " seconds! Here is your score:");
+    }
+    var scoreValue = $('<h1>');
+    var scorePC = $('<h1>');
+    scorePC.text(scorePercent + "%");
+    scoreValue.text(correctGuess + "/" + questionBank.length);
+    scoreText.append(scorePC);
+    scoreText.append(scoreValue);
+    scoreCard.append(scoreText);
+    $('#wrapper').append(scoreCard);
+}
 
 function shuffle(a) {
     var j, x, i;
@@ -127,15 +155,36 @@ function shuffle(a) {
     return a;
 }
 
+function score() {
+    // 
+    var scoring = $('#wrapper').find('input:checked');
+    for (var i = 0; i < scoring.length; i++) {
+        console.log(scoring[i].value);
+
+        if (scoring[i].value == "correct") {
+            correctGuess++;
+        }
+
+        else if (scoring[i].value == "false") {
+            wrongGuess++;
+        }
+
+        scorePercent = (correctGuess / questionBank.length) * 100;
+
+        // if ()
+        // $('#wrapper');
+    }
+}
+
 function game() {
     $('#wrapper').empty();
     $('#wrapper').addClass('bisque');
-    var j = [0, 1, 2, 3];
+
 
     var questionDiv = $('<div>');
     questionDiv.addClass('questions');
     // questionDiv.addClass('clearfix');
-    
+
 
     for (var i = 0; i < questionBank.length; i++) {
         shuffle(j);
@@ -146,7 +195,7 @@ function game() {
         questionText.text(questionBank[i].question);
         questionDiv.append(questionText);
 
-        
+
 
         for (var x = 0; x < j.length; x++) {
             if (j[x] == 0) {
@@ -154,6 +203,7 @@ function game() {
                 var answerLabel = $('<label>');
                 questionAnswer.attr('type', "checkbox");
                 questionAnswer.attr('value', "correct");
+                questionAnswer.attr('name', "question" + i);
                 answerLabel.addClass('clearfix');
                 answerLabel.html(questionBank[i].answer[(j[x])]);
                 answerLabel.append(questionAnswer);
@@ -165,6 +215,7 @@ function game() {
                 var answerLabel = $('<label>');
                 questionAnswer.attr('type', "checkbox");
                 questionAnswer.attr('value', "false");
+                questionAnswer.attr('name', "question" + i);
                 answerLabel.addClass('clearfix');
                 answerLabel.html(questionBank[i].answer[(j[x])]);
                 answerLabel.append(questionAnswer);
@@ -179,13 +230,56 @@ function game() {
     $('#wrapper').append(questionDiv);
 }
 
-$('#wrapper').on("click", '#submit', function() {
-    game();
+$('#wrapper').on("click", '#submit', function () {
+    window.clearInterval(timer);
+    setTimeout(score, 50);
+    setTimeout(scoreScreen, 80);
 });
-$('#wrapper').on("click", '#startButton', function() {
+var timer;
+$('#wrapper').on("click", '#startButton', function () {
     game();
+
+    var timeBox = $('<h1>');
+    timeBox.attr('id', "timerText");
+    $('#timer').append(timeBox);
+
+    timer = setInterval(gameTimer, 1000);
+
+
+    function gameTimer() {
+        $('#timerText').text(time);
+
+        if (time !== 0) {
+            console.log(time);
+
+
+            time--
+        }
+        else if (time == 0) {
+            outOfTime = true;
+            setTimeout(score, 50);
+            setTimeout(scoreScreen, 80);
+            window.clearInterval(timer);
+            $('#timerText').text(time);
+
+        }
+    }
 });
 startScreen();
+$("#wrapper").on('click', "input:checkbox", function () {
+
+    var $box = $(this);
+
+    if ($box.is(":checked")) {
+
+        var group = "input:checkbox[name='" + $box.attr("name") + "']";
+        $(group).prop("checked", false);
+        $box.prop("checked", true);
+
+    } else {
+        $box.prop("checked", false);
+    }
+});
 // game();
 console.log(questionBank[1].question);
 console.log(questionBank[1].answer[0]);
